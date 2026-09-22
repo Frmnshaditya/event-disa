@@ -1,0 +1,199 @@
+@import "tailwindcss";
+
+@theme {
+  --color-surface-container-highest: #d5e3fd;
+  --color-on-secondary-fixed: #410100;
+  --color-surface-container: #e6eeff;
+  --color-background: #f8f9ff;
+  --color-inverse-primary: #81d1f0;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-high: #dde9ff;
+  --color-inverse-surface: #233144;
+  --color-tertiary-fixed-dim: #ffb95f;
+  --color-surface-tint: #006781;
+  --color-on-secondary: #ffffff;
+  --color-secondary-fixed-dim: #ffb4a8;
+  --color-on-secondary-fixed-variant: #8a1c10;
+  --color-on-primary-fixed-variant: #004d62;
+  --color-on-primary-fixed: #001f29;
+  --color-tertiary: #764900;
+  --color-secondary: #ab3425;
+  --color-surface-bright: #f8f9ff;
+  --color-surface-dim: #ccdbf4;
+  --color-on-error-container: #93000a;
+  --color-on-tertiary-container: #ffe9d4;
+  --color-primary-container: #0e7490;
+  --color-surface-variant: #d5e3fd;
+  --color-on-error: #ffffff;
+  --color-primary-fixed: #b9eaff;
+  --color-on-tertiary: #ffffff;
+  --color-primary: #005a71;
+  --color-secondary-container: #fc6f5a;
+  --color-on-secondary-container: #6d0300;
+  --color-error-container: #ffdad6;
+  --color-secondary-fixed: #ffdad4;
+  --color-on-background: #0d1c2f;
+  --color-on-primary-container: #d3f1ff;
+  --color-on-surface-variant: #3f484c;
+  --color-on-primary: #ffffff;
+  --color-on-tertiary-fixed: #2a1700;
+  --color-primary-fixed-dim: #81d1f0;
+  --color-on-surface: #0d1c2f;
+  --color-on-tertiary-fixed-variant: #653e00;
+  --color-surface-container-low: #eff4ff;
+  --color-outline-variant: #bec8cd;
+  --color-surface: #f8f9ff;
+  --color-error: #ba1a1a;
+  --color-tertiary-container: #965f00;
+  --color-tertiary-fixed: #ffddb8;
+  --color-inverse-on-surface: #ebf1ff;
+  --color-outline: #6f787d;
+
+  --color-accent: #d97706;
+  --color-accent-container: rgba(217, 119, 6, 0.16);
+  --color-on-accent: #ffffff;
+  --color-on-accent-container: #78350f;
+  --color-topbar-bg: #005a71;
+  --color-on-topbar: #ffffff;
+
+  --font-headline-sm: "Inter", sans-serif;
+  --font-body-lg: "Inter", sans-serif;
+  --font-headline-lg: "Inter", sans-serif;
+  --font-metric-val: "Inter", sans-serif;
+  --font-display-sm: "Inter", sans-serif;
+  --font-body-md: "Inter", sans-serif;
+  --font-label-lg: "Inter", sans-serif;
+  --font-headline-md: "Inter", sans-serif;
+  --font-display-lg: "Inter", sans-serif;
+  --font-label-md: "Inter", sans-serif;
+  --font-body-sm: "Inter", sans-serif;
+  --font-display-md: "Inter", sans-serif;
+  --font-label-sm: "Inter", sans-serif;
+
+  --text-headline-sm: 1rem;
+  --text-headline-sm--line-height: 1.5rem;
+  --text-body-lg: 1rem;
+  --text-body-lg--line-height: 1.5rem;
+  --text-headline-lg: 1.25rem;
+  --text-headline-lg--line-height: 1.75rem;
+  --text-headline-lg--letter-spacing: -0.01em;
+  --text-metric-val: clamp(1.75rem, 3.5vw, 2.25rem);
+  --text-metric-val--line-height: 2.5rem;
+  --text-metric-val--letter-spacing: -0.02em;
+  --text-display-sm: clamp(1.25rem, 2.5vw, 1.5rem);
+  --text-display-sm--line-height: 2rem;
+  --text-display-sm--letter-spacing: -0.01em;
+  --text-body-md: 0.875rem;
+  --text-body-md--line-height: 1.25rem;
+  --text-label-lg: 0.875rem;
+  --text-label-lg--line-height: 1.25rem;
+  --text-label-lg--letter-spacing: 0.01em;
+  --text-headline-md: 1.125rem;
+  --text-headline-md--line-height: 1.625rem;
+  --text-headline-md--letter-spacing: -0.005em;
+  --text-display-lg: clamp(1.75rem, 4vw, 2.5rem);
+  --text-display-lg--line-height: 3rem;
+  --text-display-lg--letter-spacing: -0.02em;
+  --text-label-md: 0.75rem;
+  --text-label-md--line-height: 1rem;
+  --text-label-md--letter-spacing: 0.01em;
+  --text-body-sm: 0.8125rem;
+  --text-body-sm--line-height: 1.125rem;
+  --text-body-sm--letter-spacing: 0.005em;
+  --text-display-md: clamp(1.5rem, 3vw, 2rem);
+  --text-display-md--line-height: 2.5rem;
+  --text-display-md--letter-spacing: -0.02em;
+  --text-label-sm: 0.6875rem;
+  --text-label-sm--line-height: 0.875rem;
+  --text-label-sm--letter-spacing: 0.02em;
+}
+
+/* Fluid root scaling: adjusts all rem units, fonts, icons, and components based on device size */
+:root {
+  font-size: 14px;
+}
+
+@media (max-width: 480px) {
+  :root {
+    font-size: 12.5px; /* compact mobile: fonts and components shrink smoothly */
+  }
+}
+
+@media (min-width: 481px) and (max-width: 767px) {
+  :root {
+    font-size: 13.5px; /* standard mobile */
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  :root {
+    font-size: 14.5px; /* tablet */
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1439px) {
+  :root {
+    font-size: 15.5px; /* desktop */
+  }
+}
+
+@media (min-width: 1440px) {
+  :root {
+    font-size: 16px; /* large desktop */
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+    width: 100%;
+    min-height: 100%;
+  }
+
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: var(--color-on-surface);
+    background-color: var(--color-background);
+    overflow-x: hidden;
+    width: 100%;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+  }
+
+  #root {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 0%;
+  }
+
+  /* Responsive image scaling */
+  img, svg, video {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Smooth button active states */
+  button {
+    touch-action: manipulation;
+  }
+}
+
+/* Custom subtle scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-outline-variant);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-outline);
+}
