@@ -262,12 +262,12 @@ export const Reports: React.FC<ReportsProps> = ({ onNavigateToParticipants }) =>
       doc.text('4. Daftar Sampel Peserta Terdaftar', 14, afterSec3);
 
       const sampleRows = participantsList.slice(0, 10).map((p, idx) => [
-        idx + 1,
-        p.namaLengkap,
-        p.kategoriDisabilitas.replace('_', ' '),
-        p.noWa,
+        String(idx + 1),
+        p.namaLengkap || '-',
+        p.kategoriDisabilitas ? String(p.kategoriDisabilitas).replace('_', ' ') : '-',
+        p.noWa || '-',
         (p.eventTitle || '-').slice(0, 32),
-        p.statusKehadiran,
+        p.statusKehadiran || '-',
       ]);
 
       autoTable(doc, {

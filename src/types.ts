@@ -9,6 +9,7 @@ export interface User {
   organizationName?: string;
   province?: string;
   city?: string;
+  address?: string;
   createdAt: string;
   avatar?: string;
   bio?: string;
@@ -25,10 +26,10 @@ export interface ApplicationSettings {
   accentColor?: string;
   publicRoleLabel?: string;
   institutionSubtitle?: string;
-  logoSize?: 'normal' | 'large' | 'xlarge';
+  logoSize?: string;
   headerBgImage?: string;
-  headerBgOverlay?: 'dark' | 'light' | 'none';
-  logoContainerBg?: 'white' | 'transparent' | 'glass';
+  headerBgOverlay?: 'dark' | 'light' | 'none' | string;
+  logoContainerBg?: 'white' | 'transparent' | 'glass' | string;
   updatedAt?: string;
   updatedBy?: string;
 }
@@ -37,19 +38,42 @@ export interface SystemLog {
   id: string;
   timestamp: string;
   user: string;
-  userRole: UserRole | 'system' | 'guest';
+  userRole: string;
+  userId?: string;
+  userName?: string;
   action: string;
-  module: 'profile' | 'settings' | 'events' | 'disability' | 'participants' | 'auth' | 'system' | 'support' | string;
+  module: string;
   details: string;
-  status: 'success' | 'warning' | 'info' | 'error';
+  description?: string;
+  status: 'success' | 'info' | 'warning' | 'error' | string;
+  ipAddress?: string;
+  createdAt?: string;
 }
 
-export type DisabilityType = 
-  | 'tunanetra' 
-  | 'tunarungu' 
-  | 'tunadaksa' 
-  | 'intelektual_autisme' 
-  | 'multi';
+export type DisabilityType =
+  | 'tunanetra'
+  | 'tunarungu'
+  | 'tunadaksa'
+  | 'intelektual_autisme'
+  | 'pendamping_umum'
+  | string;
+
+export interface DisabilityMaster {
+  id: string;
+  kode: string;
+  nama: string;
+  kategoriUtama: 'Sensorik' | 'Fisik' | 'Intelektual' | 'Mental' | 'Ganda' | string;
+  deskripsi: string;
+  metodePembelajaran: string;
+  fasilitasRekomendasi: string[];
+  warnaHex: string;
+  icon: string;
+  isAktif: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+  name?: string;
+  description?: string;
+}
 
 export interface TrainingProposal {
   id: string;
@@ -67,45 +91,57 @@ export interface TrainingProposal {
   tanggalKegiatan: string;
   targetDanKuotaPeserta: number;
   targetPeserta?: string;
+  kuotaDisetujui?: number;
   kebutuhanPeserta: string[];
   status: 'menunggu_persetujuan' | 'disetujui' | 'ditolak';
-  alasanPenolakan?: string;
+  isAktif: boolean;
+  createdAt?: string;
   tanggalPersetujuan?: string;
   linkPendaftaran?: string;
-  kuotaDisetujui?: number;
-  isAktif: boolean;
-  createdAt: string;
+  alasanPenolakan?: string;
   jumlahPendaftar: number;
-  fotoDokumentasi?: string[];
-}
-
-export interface DisabilityMaster {
-  id: string;
-  kode: string;
-  nama: string;
-  kategoriUtama: 'Sensorik' | 'Fisik' | 'Intelektual & Mental' | 'Ganda' | 'Pendamping';
-  deskripsi: string;
-  metodePembelajaran: string;
-  fasilitasRekomendasi: string[];
-  warnaHex: string;
-  icon: string;
-  isAktif: boolean;
-  createdAt: string;
+  fotoDokumentasi: string[];
+  title?: string;
+  description?: string;
+  imageUrl?: string;
+  category?: string;
+  organizer?: string;
+  location?: string;
+  startDate?: string;
+  endDate?: string;
+  quota?: number;
+  registered?: number;
+  updatedAt?: string;
 }
 
 export interface Participant {
   id: string;
   eventId: string;
-  eventTitle?: string;
+  eventTitle: string;
   namaLengkap: string;
   noWa: string;
   email: string;
   usia: number;
-  kategoriDisabilitas: 'tunanetra' | 'tunarungu' | 'tunadaksa' | 'intelektual_autisme' | 'pendamping_umum';
+  kategoriDisabilitas: DisabilityType;
   kebutuhanFasilitas: string[];
   catatanKhusus: string;
-  statusKehadiran: 'terdaftar' | 'hadir' | 'batal';
+  statusKehadiran: 'terdaftar' | 'hadir' | 'batal' | 'pending' | string;
   waktuDaftar: string;
+  name?: string;
+  phone?: string;
+  gender?: string;
+  birthDate?: string;
+  address?: string;
+  province?: string;
+  city?: string;
+  disabilityType?: string;
+  disabilityId?: string;
+  organizationName?: string;
+  trainingId?: string;
+  trainingTitle?: string;
+  status?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface QuranCommunity {
@@ -121,22 +157,39 @@ export interface QuranCommunity {
   latitude: number;
   longitude: number;
   kontakWa: string;
-  kontakEmail?: string;
+  kontakEmail: string;
   jumlahSantri: number;
   fasilitasTersedia: string[];
   programUnggulan: string;
   deskripsi: string;
   verified: boolean;
-  activeEventsCount?: number;
+  activeEventsCount: number;
+  name?: string;
+  description?: string;
+  leader?: string;
+  phone?: string;
+  email?: string;
+  address?: string;
+  logo?: string;
+  memberCount?: number;
+  status?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface SystemStats {
-  totalProposals: number;
-  approvedEvents: number;
-  pendingProposals: number;
-  rejectedProposals: number;
-  totalParticipants: number;
-  totalCommunities: number;
-  totalMitra: number;
-  totalSuperAdmin: number;
+  totalProposals?: number;
+  approvedEvents?: number;
+  pendingProposals?: number;
+  rejectedProposals?: number;
+  totalParticipants?: number;
+  totalCommunities?: number;
+  totalMitra?: number;
+  totalSuperAdmin?: number;
+  totalUsers?: number;
+  totalTrainingProposals?: number;
+  totalDisabilities?: number;
+  activeTrainingProposals?: number;
+  pendingParticipants?: number;
+  [key: string]: number | undefined;
 }

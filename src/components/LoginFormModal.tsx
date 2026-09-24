@@ -1,30 +1,30 @@
 import React, { useEffect, useState } from 'react';
-
-import { User } from '../types.ts';
+import { User, ApplicationSettings } from '../types.ts';
 
 interface LoginFormModalProps {
   isOpen: boolean;
   onClose: () => void;
   onLoginSuccess: (user: User) => void;
+  defaultRoleHint?: 'mitra' | 'superadmin' | string;
 }
 
-interface ApplicationSettings {
-  applicationName: string;
-  logo: string;
-  favicon: string;
-  topbarColor: string;
-  primaryColor: string;
-  secondaryColor: string;
-  accentColor: string;
-  publicRoleLabel: string;
-  institutionSubtitle: string;
-  logoSize: 'small' | 'medium' | 'large';
-  headerBgImage: string;
-  headerBgOverlay: string;
-  logoContainerBg: string;
-  updatedAt: string;
-  updatedBy: string;
-}
+const DEFAULT_SETTINGS: ApplicationSettings = {
+  applicationName: "Event for Disability to Qur'an",
+  logo: '',
+  favicon: '',
+  topbarColor: '#0f172a',
+  primaryColor: '#334155',
+  secondaryColor: '#64748b',
+  accentColor: '#10b981',
+  publicRoleLabel: 'Login',
+  institutionSubtitle: 'Login untuk Mitra dan Super Admin',
+  logoSize: '144px',
+  headerBgImage: '',
+  headerBgOverlay: 'dark',
+  logoContainerBg: 'white',
+  updatedAt: '',
+  updatedBy: '',
+};
 
 export const LoginFormModal: React.FC<LoginFormModalProps> = ({
   isOpen,
@@ -41,7 +41,7 @@ export const LoginFormModal: React.FC<LoginFormModalProps> = ({
   const [isLoading, setIsLoading] = useState(false);
 
   const [appSettings, setAppSettings] =
-    useState<ApplicationSettings | null>(null);
+    useState<ApplicationSettings>(DEFAULT_SETTINGS);
 
   const [settingsLoading, setSettingsLoading] =
     useState(false);
@@ -51,7 +51,7 @@ export const LoginFormModal: React.FC<LoginFormModalProps> = ({
    * - form selalu kosong
    * - tidak ada akun default
    * - tidak ada akun demo
-   * - logo diambil dari Application Settings
+   * - logo dan branding diambil dari Application Settings
    */
   useEffect(() => {
     if (!isOpen) {
@@ -87,7 +87,10 @@ export const LoginFormModal: React.FC<LoginFormModalProps> = ({
         }
 
         if (!cancelled && data?.settings) {
-          setAppSettings(data.settings);
+          setAppSettings({
+            ...DEFAULT_SETTINGS,
+            ...data.settings,
+          });
         }
       } catch (error) {
         console.error(
@@ -96,7 +99,7 @@ export const LoginFormModal: React.FC<LoginFormModalProps> = ({
         );
 
         if (!cancelled) {
-          setAppSettings(null);
+          setAppSettings(DEFAULT_SETTINGS);
         }
       } finally {
         if (!cancelled) {
@@ -112,6 +115,38 @@ export const LoginFormModal: React.FC<LoginFormModalProps> = ({
     };
   }, [isOpen]);
 
+  /**
+   * Update favicon dan title berdasarkan Application Settings.
+   */
+  useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
+
+    if (appSettings.applicationName) {
+      document.title = appSettings.applicationName;
+    }
+
+    if (appSettings.favicon) {
+      let faviconLink =
+        document.querySelector<HTMLLinkElement>(
+          'link[rel="icon"]'
+        );
+
+      if (!faviconLink) {
+        faviconLink = document.createElement('link');
+        faviconLink.rel = 'icon';
+        document.head.appendChild(faviconLink);
+      }
+
+      faviconLink.href = appSettings.favicon;
+    }
+  }, [
+    isOpen,
+    appSettings.applicationName,
+    appSettings.favicon,
+  ]);
+
   if (!isOpen) {
     return null;
   }
@@ -125,7 +160,7 @@ export const LoginFormModal: React.FC<LoginFormModalProps> = ({
    *
    * POST /api/auth/login
    *
-   * Backend kemudian memeriksa:
+   * Backend memeriksa:
    *
    * event_disabilitas_db.users
    */
@@ -207,6 +242,54 @@ export const LoginFormModal: React.FC<LoginFormModalProps> = ({
   };
 
   /**
+   * Ukuran logo.
+   *
+   * Application Settings sekarang menggunakan nilai seperti:
+   * 80px
+   * 112px
+   * 144px
+   *
+   * Tetap mendukung nilai lama:
+   * small
+   * medium
+   * large
+   */
+  const getLogoSize = () => {
+    const rawSize = String(
+      appSettings.logoSize || '144px'
+    ).trim();
+
+    if (rawSize === 'small') {
+      return 80;
+    }
+
+    if (rawSize === 'medium') {
+      return 112;
+    }
+
+    if (rawSize === 'large') {
+      return 144;
+    }
+
+    const parsedSize = Number.parseInt(
+      rawSize.replace('px', ''),
+      10
+    );
+
+    if (
+      Number.isFinite(parsedSize) &&
+      parsedSize > 0
+    ) {
+      return Math.min(
+        Math.max(parsedSize, 40),
+        240
+      );
+    }
+
+    return 144;
+  };
+
+  /**
    * Logo utama aplikasi.
    *
    * Sumber:
@@ -218,18 +301,15 @@ export const LoginFormModal: React.FC<LoginFormModalProps> = ({
    * - akun demo
    */
   const renderLogo = () => {
-    if (appSettings?.logo) {
-      const logoSize =
-        appSettings.logoSize === 'small'
-          ? 'w-16 h-16'
-          : appSettings.logoSize === 'medium'
-            ? 'w-20 h-20'
-            : 'w-24 h-24';
+    const logoSize = getLogoSize();
 
+    if (appSettings.logo) {
       return (
         <div
-          className={`flex items-center justify-center overflow-hidden rounded-2xl ${logoSize}`}
+          className="flex items-center justify-center overflow-hidden rounded-2xl"
           style={{
+            width: `${logoSize}px`,
+            height: `${logoSize}px`,
             backgroundColor:
               appSettings.logoContainerBg ||
               'white',
@@ -254,7 +334,11 @@ export const LoginFormModal: React.FC<LoginFormModalProps> = ({
      */
     return (
       <div
-        className="w-20 h-20 rounded-2xl flex items-center justify-center border border-slate-200 bg-slate-50"
+        className="rounded-2xl flex items-center justify-center border border-slate-200 bg-slate-50"
+        style={{
+          width: `${Math.min(logoSize, 80)}px`,
+          height: `${Math.min(logoSize, 80)}px`,
+        }}
         aria-label="Logo belum tersedia"
       >
         <span className="material-symbols-outlined text-[40px] text-slate-400">
@@ -264,17 +348,37 @@ export const LoginFormModal: React.FC<LoginFormModalProps> = ({
     );
   };
 
+  /**
+   * Background login.
+   *
+   * Jika Application Settings memiliki background,
+   * gunakan background tersebut.
+   *
+   * Jika belum ada, gunakan background sebelumnya.
+   */
+  const backgroundImage =
+    appSettings.headerBgImage ||
+    'https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=1600&auto=format&fit=crop';
+
+  const overlayClass =
+    appSettings.headerBgOverlay === 'light'
+      ? 'bg-white/45'
+      : appSettings.headerBgOverlay === 'none'
+        ? 'bg-transparent'
+        : 'bg-slate-950/75';
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Background */}
       <div
         className="fixed inset-0 bg-cover bg-center transition-all duration-300"
         style={{
-          backgroundImage:
-            "url('https://images.unsplash.com/photo-1577896851231-70ef18881754?q=80&w=1600&auto=format&fit=crop')",
+          backgroundImage: `url('${backgroundImage}')`,
         }}
       >
-        <div className="absolute inset-0 bg-slate-950/75 backdrop-blur-sm" />
+        <div
+          className={`absolute inset-0 ${overlayClass} backdrop-blur-sm`}
+        />
       </div>
 
       {/* Login Card */}
@@ -310,12 +414,12 @@ export const LoginFormModal: React.FC<LoginFormModalProps> = ({
             id="login-title"
             className="mt-3 text-[19px] sm:text-[21px] font-bold text-slate-900 tracking-tight"
           >
-            {appSettings?.applicationName ||
+            {appSettings.applicationName ||
               "Event for Disability to Qur'an"}
           </h2>
 
           <p className="text-[12px] sm:text-[13px] text-slate-500 font-medium mt-1">
-            {appSettings?.institutionSubtitle ||
+            {appSettings.institutionSubtitle ||
               'Login untuk Mitra dan Super Admin'}
           </p>
         </div>
@@ -429,6 +533,7 @@ export const LoginFormModal: React.FC<LoginFormModalProps> = ({
         <div className="mt-5 pt-4 border-t border-slate-100">
           <div className="flex items-center justify-center gap-2 text-[10px] text-slate-400">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+
             <span>
               Login diverifikasi melalui database sistem
             </span>
@@ -438,3 +543,5 @@ export const LoginFormModal: React.FC<LoginFormModalProps> = ({
     </div>
   );
 };
+
+export default LoginFormModal;

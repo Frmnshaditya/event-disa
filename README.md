@@ -71,7 +71,7 @@ AL-Qur-an-Disa/
    DB_PORT=3306
    DB_USER=root
    DB_PASSWORD=
-   DB_DATABASE=quran_disabilitas_db
+   DB_DATABASE=event_disabilitas_db
    ```
 
 ---

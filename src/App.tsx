@@ -451,7 +451,6 @@ export default function App() {
           isOpen={isLoginModalOpen}
           onClose={() => setIsLoginModalOpen(false)}
           onLoginSuccess={handleLoginSuccess}
-          users={users}
           defaultRoleHint={loginRoleHint}
         />
       </div>
@@ -781,10 +780,7 @@ export default function App() {
             currentUser?.role === 'superadmin' ? (
               <ApplicationSettingsDashboard
                 currentUser={currentUser}
-                settings={appSettings}
-                onSaveSettings={handleSaveAppSettings}
-                onCancel={() => setActiveView('superadmin')}
-                onLogAction={handleLogAction}
+                onSettingsUpdated={handleSaveAppSettings}
               />
             ) : (
               <div className="p-8 max-w-md mx-auto text-center mt-8">
@@ -993,7 +989,6 @@ export default function App() {
         isOpen={isLoginModalOpen}
         onClose={() => setIsLoginModalOpen(false)}
         onLoginSuccess={handleLoginSuccess}
-        users={users}
         defaultRoleHint={loginRoleHint}
       />
 
